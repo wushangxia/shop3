@@ -20,8 +20,10 @@ import xadmin
 from django.views.static import serve
 from shop3.settings import MEDIA_ROOT
 from rest_framework.documentation import include_docs_urls
-from goods.views import GoodsListViewSet,CategoryViewSet
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
+from goods.views import GoodsListViewSet,CategoryViewSet
 router = DefaultRouter()
 router.register(r'goods', GoodsListViewSet)
 router.register(r'category',CategoryViewSet)
@@ -31,5 +33,8 @@ urlpatterns = [
     path('media/<path:path>',serve,{'document_root':MEDIA_ROOT}),
     path('docs',include_docs_urls(title='shop3')),
     path('api-auth/',include('rest_framework.urls')),
+    path('api-token-auth/', views.obtain_auth_token),
+    path('jwt-auth/', obtain_jwt_token),
+    path('login/', obtain_jwt_token),
     url(r'^', include(router.urls)),
 ]

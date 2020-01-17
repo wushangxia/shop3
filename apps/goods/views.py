@@ -8,6 +8,7 @@ from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import GoodFilter
 # Create your views here.
@@ -53,6 +54,7 @@ class GoodsPagination(PageNumberPagination):
     page_query_param =  'page'
     max_page_size = 100
 
+
 #class GoodsListView(generics.ListAPIView):
     # "商品列表页"
     # pagination_class =  GoodsPagination
@@ -64,8 +66,10 @@ class GoodsListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     pagination_class =  GoodsPagination
     queryset = Goods.objects.all().order_by('id')
     serializer_class = GoodsSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
     filter_class = GoodFilter
+    search_fields = ('name','goods_brief','goods_desc')
+    ordering_fields = ('sold_num','shop_price')
 
 class CategoryViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     queryset = GoodsCategory.objects.filter(category_type=1)
