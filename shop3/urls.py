@@ -15,9 +15,21 @@ Including another URLconf
 """
 # from django.contrib import admin
 from django.urls import path
-from django.urls import path,include
+from django.conf.urls import url, include
 import xadmin
+from django.views.static import serve
+from shop3.settings import MEDIA_ROOT
+from rest_framework.documentation import include_docs_urls
+from goods.views import GoodsListViewSet,CategoryViewSet
+from rest_framework.routers import DefaultRouter
+router = DefaultRouter()
+router.register(r'goods', GoodsListViewSet)
+router.register(r'category',CategoryViewSet)
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
+    path('media/<path:path>',serve,{'document_root':MEDIA_ROOT}),
+    path('docs',include_docs_urls(title='shop3')),
+    path('api-auth/',include('rest_framework.urls')),
+    url(r'^', include(router.urls)),
 ]

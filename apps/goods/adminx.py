@@ -25,12 +25,14 @@ class GoodsCategoryAdmin(object):
 
 class GoodsBrandAdmin(object):
     list_display = ["category","image","name","desc"]
-    # 实现过滤出所有的一级类目
+
+    #实现过滤出所有的一级类目
     def get_context(self):
         context = super(GoodsBrandAdmin,self).get_context()
         if 'from' in context:
-            context["from"].fields['category'].queryset = GoodsCategory.objects.filter(category=1)
-            return context
+            context["from"].fields['category'].queryset = GoodsCategory.objects.filter(category_type=1)
+        return context
+
 
 class BannerGoodsAdmin(object):
     list_display = ["goods","image","index"]
@@ -42,7 +44,7 @@ class IndexAdAdmin(object):
     list_display = ["category","goods"]
 
 xadmin.site.register(Goods,GoodsAdmin)
-xadmin.site.register(GoodsCategory,GoodsBrandAdmin)
+xadmin.site.register(GoodsCategory,GoodsCategoryAdmin)
 xadmin.site.register(Banner,BannerGoodsAdmin)
 xadmin.site.register(GoodsCategoryBrand,GoodsBrandAdmin)
 xadmin.site.register(HotSearchWords,HotSearchAdmin)

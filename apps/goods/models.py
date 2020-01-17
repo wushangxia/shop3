@@ -44,7 +44,7 @@ class Goods(models.Model):
     click_num = models.IntegerField(default=0,verbose_name="点击数")
     sold_num = models.IntegerField(default=0,verbose_name="商品销售数量")
     fav_num = models.IntegerField(default=0,verbose_name="收藏数")
-    goods_sn = models.IntegerField(default=0,verbose_name="库存数")
+    goods_num = models.IntegerField(default=0,verbose_name="库存数")
     market_price = models.FloatField(default=0,verbose_name="市场价格")
     shop_price = models.FloatField(default=0,verbose_name="本店价格")
     goods_brief = models.TextField(max_length=500,verbose_name="商品剪短描述")

@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,9 +23,9 @@ SECRET_KEY = 'poth7bquf_j)wph&5kynzio-4k6&2#b=vi_37uir5g340^pvrz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+MEDIA_URL = "/media/"
 ALLOWED_HOSTS = ['*']
-
+STATIC_URL = '/static/'
 #重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'users.UserProfile'
 # Application definition
@@ -43,13 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'xadmin',
+    'django_filters',
+    'DjangoUeditor',
     'users.apps.UsersConfig',
     'goods.apps.GoodsConfig',
     'trade.apps.TradeConfig',
     'user_operation.apps.UserOperationConfig',
-    'xadmin',
-    'crispy_forms',
-    'DjangoUeditor'
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -131,11 +132,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-import sys
-sys.path.insert(0,BASE_DIR)
-sys.path.insert(0,os.path.join(BASE_DIR, 'apps'))
-sys.path.insert(0,os.path.join(BASE_DIR, 'extra_apps'))
+
 
 DATABASES = {
     'default': {
@@ -150,4 +147,10 @@ DATABASES = {
         # 'OPTIONS':{'init_command': 'SET storage_engine=INNODB'}, #这样设置会报错，改为
         "OPTIONS":{"init_command":"SET default_storage_engine=INNODB;"}
     }
+}
+REST_FRAMEWORK = {
+    #分页
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    #每页显示的个数
+    'PAGE_SIZE': 10,
 }
