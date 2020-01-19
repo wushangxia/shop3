@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework.mixins import CreateModelMixin
 from rest_framework import viewsets
-from .serializers import SmsSerializer
+from .serializers import SmsSerializer,UserRegSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from utils.yunpian import YunPian
@@ -59,3 +59,8 @@ class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
         # self.perform_create(serializer)
         # headers = self.get_success_headers(serializer.data)
         # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class UserViewset(CreateModelMixin,viewsets.GenericViewSet):
+    "用户"
+    serializer_class = UserRegSerializer
+    queryset = User.objects.all()

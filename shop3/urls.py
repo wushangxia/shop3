@@ -24,9 +24,12 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 from goods.views import GoodsListViewSet,CategoryViewSet
+from users.views import UserViewset,SmsCodeViewset
 router = DefaultRouter()
 router.register(r'goods', GoodsListViewSet)
 router.register(r'category',CategoryViewSet)
+router.register(r'codes', SmsCodeViewset)
+router.register(r'users', UserViewset)
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
