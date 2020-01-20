@@ -8,6 +8,7 @@ from rest_framework.validators import UniqueValidator
 User = get_user_model()
 
 class SmsSerializer(serializers.Serializer):
+
     mobile = serializers.CharField(max_length=11)
     def validate_mobile(self,mobile):
         ''''手机号验证'''
@@ -30,9 +31,10 @@ class UserRegSerializer(serializers.ModelSerializer):
     # 仅用作后台和密码进行比较，然后把结果返回前台，所以不存到数据库，在全局钩子使用时要pop掉
     code = serializers.CharField(required=True,write_only=True,max_length=4,min_length=4,error_messages={"blank":"请输入2验证码",
     "required":"请输入验4证码","max_length":"验证码格式不对","min_length":"验证码格式不对"},help_text="验证码")
-    print(33,code)
     #验证用户名是否存在
     username = serializers.CharField(label="用户名",help_text="用户名",required=True,allow_blank=False,validators=[UniqueValidator(queryset=User.objects.all(),message="用户已经存在")])
+    #输入密码的时候不显示明文
+    password = serializers.CharField(style={'input_type':'password'},label=True,write_only=True)
     #验证code
     def  validate_code(self, code):
         # 最近的一个验证码
@@ -42,8 +44,8 @@ class UserRegSerializer(serializers.ModelSerializer):
         if verify_records:
             #最近一个验证码
             last_record = verify_records[0]
-            #有效期为5分钟--测试20
-            five_mintes_ago = datetime.now()- timedelta(hours=0,minutes=20,seconds=0)
+            #有效期为5分钟--测试60
+            five_mintes_ago = datetime.now()- timedelta(hours=0,minutes=60,seconds=0)
             if five_mintes_ago > last_record.add_time:
                 raise serializers.ValidationError("验证码过期")
             if last_record.code !=code:
@@ -57,6 +59,14 @@ class UserRegSerializer(serializers.ModelSerializer):
         #code是自己添加的，数据库没有这个，验证完就删除掉
         del attrs["code"]
         return attrs
+    #这是重载Create方法，
+    def create(self, validated_data):
+        #return User.objects.create(**validated_data)
+        user = super(UserRegSerializer,self).create(validated_data=validated_data)
+        print('serializer',validated_data['password'])
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
     class Meta:
         model = User
-        fields = ('username','code','mobile')
+        fields = ("username", "code", "mobile", "password")

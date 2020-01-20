@@ -9,7 +9,7 @@ class YunPian(object):
         parmas = {
             "apikey":self.api_key,
             "mobile":mobile,
-            "text":"【伍尚霞测试】伍尚霞测试{code}".format(code=code)
+            "text":"【伍尚霞测试】你的验证码是{code}".format(code=code)
         }
         response = requests.post(self.single_send_url,data=parmas)
         re_dict = json.loads(response.text)

@@ -11,6 +11,7 @@ from utils.yunpian import YunPian
 from shop3.settings import APIKEY
 from random import choice
 from .models import VerifyCode
+from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
 User = get_user_model()
 
@@ -29,6 +30,7 @@ class CustomBackend(ModelBackend):
 class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
     "手机验证码"
     serializer_class = SmsSerializer
+    queryset = VerifyCode.objects.all()
     def generate_code(self):
         "生成四位随机验证码"
         seeds = "1234567890"
@@ -41,7 +43,7 @@ class SmsCodeViewset(CreateModelMixin,viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         # 验证合法
         serializer.is_valid(raise_exception=True)
-        mobile = serializer.validated_data('mobile')
+        mobile = serializer.validated_data['mobile']
         yun_pian = YunPian(APIKEY)
         #生成验证码
         code = self.generate_code()
@@ -64,3 +66,20 @@ class UserViewset(CreateModelMixin,viewsets.GenericViewSet):
     "用户"
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     user = self.perform_create(serializer)
+    #     print(73,user)
+    #     re_dict = serializer.data
+    #     # 补充生成记录登录状态的token
+    #     payload = jwt_payload_handler(user)
+    #     re_dict["token"] = jwt_encode_handler(payload)
+    #     re_dict["name"] = user.name if user.name else user.username
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+    # def perform_create(self, serializer):
+    #     return serializer.save()
+    #
+    # def get_object(self):
+    #     return self.request.user

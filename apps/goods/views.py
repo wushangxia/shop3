@@ -60,8 +60,8 @@ class GoodsPagination(PageNumberPagination):
     # pagination_class =  GoodsPagination
     # queryset = Goods.objects.all().order_by('id')
     # serializer_class = GoodsSerializer
-
-class GoodsListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
+#商品详情页只需要多继承一个类（mixins.RetrieveModelMixin）
+class GoodsListViewSet(mixins.RetrieveModelMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     "商品列表页"
     pagination_class =  GoodsPagination
     queryset = Goods.objects.all().order_by('id')
@@ -74,3 +74,4 @@ class GoodsListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
 class CategoryViewSet(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     queryset = GoodsCategory.objects.filter(category_type=1)
     serializer_class = CategorySerializer
+
