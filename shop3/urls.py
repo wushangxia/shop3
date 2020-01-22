@@ -31,7 +31,7 @@ router.register(r'goods', GoodsListViewSet)
 router.register(r'category',CategoryViewSet)
 router.register(r'codes', SmsCodeViewset)
 router.register(r'users', UserViewset)
-router.register(r'userfavs', UserFavViewset)
+router.register(r'userfavs', UserFavViewset,basename="userfav")
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('ueditor/', include('DjangoUeditor.urls')),
