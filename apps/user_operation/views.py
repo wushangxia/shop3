@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework import mixins
 from .models import UserFav
-from .serializers import UserFavSerializer
+from .serializers import UserFavSerializer,UserFavDetailSerializer
 from rest_framework.permissions import IsAuthenticated
 from utils.permissions import IsOwnerOrReadOnly
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -18,7 +18,14 @@ class UserFavViewset(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retr
     create:
         收藏商品
     """
-    serializer_class = UserFavSerializer
+    #serializer_class = UserFavSerializer
+    #动态选择serializer
+    def get_serializer_class(self):
+        if self.action == "list":
+            return UserFavDetailSerializer
+        elif self.action == 'create':
+            return UserFavSerializer
+        return UserFavSerializer
     #permission是用来做判断权限的
     #IsAuthenticated :必须登录用户 IsOwerORReadOnly 必须是当前登录的用户
     #只有登录用户才可以收藏
